@@ -9,7 +9,9 @@ public class Timer : MonoBehaviour
     private bool active; 
     private float currentTime; 
     [SerializeField] private TMP_Text text; 
+    [SerializeField] private TMP_Text besttext; 
     public CameraFollow cam; 
+    public double best = 0.0; 
     
     // Start is called before the first frame update
     void Start()
@@ -17,6 +19,12 @@ public class Timer : MonoBehaviour
         cam = GetComponentInParent<CameraFollow>(); 
         currentTime = 0; 
         active = true; 
+        if(PlayerPrefs.HasKey("bestTime")){
+            best = double.Parse(PlayerPrefs.GetString("bestTime"));
+        }
+        besttext.text = ((int)(best/60))%60 + ":" + (best%60); 
+    
+
     }
 
     // Update is called once per frame
@@ -32,6 +40,12 @@ public class Timer : MonoBehaviour
             cam.SpeedUp(); 
            // Debug.Log("pop");
         }
+        if(time.TotalSeconds > best){
+            best = time.TotalSeconds; 
+            PlayerPrefs.SetString("bestTime", best.ToString());
+        }
+        
+        
     }
     public void StartTimer(){
         active = true; 
